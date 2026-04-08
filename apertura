@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRM JAE SISTEMAS PRO</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+body{font-family:Arial;background:#0f172a;color:#fff;margin:0;padding:10px;}
+.box{background:#1e293b;padding:15px;border-radius:15px;max-width:700px;margin:auto;display:none;}
+input,textarea,select{width:100%;padding:10px;margin:6px 0;border-radius:8px;border:none;}
+button{width:100%;padding:12px;margin:5px 0;border:none;border-radius:10px;font-weight:bold;cursor:pointer;}
+.save{background:#3b82f6;}
+.pdf{background:#10b981;}
+.nuevo{background:#facc15;color:#000;}
+.whatsapp{background:#22c55e;}
+.export{background:#8b5cf6;}
+.jsonbtn{background:#f472b6;}
+.item{background:#334155;padding:10px;border-radius:8px;margin:5px 0;display:flex;justify-content:space-between;align-items:center;}
+.item button{width:auto;padding:5px;margin:2px;}
+#msg{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#22c55e;padding:10px;border-radius:10px;display:none;}
+#loginBox{max-width:400px;margin:auto;background:#1e293b;padding:20px;border-radius:15px;}
+</style>
+</head>
+<body>
+
+<div id="loginBox">
+<h2>Login 🔒</h2>
+<input id="adminEmail" placeholder="Email">
+<input id="adminPass" type="password" placeholder="Contraseña">
+<button onclick="login()">Ingresar</button>
+</div>
+
+<div class="box" id="mainApp">
+
+<h2>Alta / Edición Cliente 🚀</h2>
+
+<input id="razon" placeholder="Razón Social">
+<input id="fantasia" placeholder="Nombre Fantasía">
+<input id="cuit" placeholder="CUIT">
+<input id="domicilio" placeholder="Domicilio">
+<input id="localidad" placeholder="Localidad">
+<input id="whatsapp" placeholder="WhatsApp">
+<input id="email" placeholder="E-mail">
+<input id="web" placeholder="Web">
+
+<select id="zonaSelect" onchange="cargarZona()">
+<option value="">Código - Zona - Responsable</option>
+
+<option value="4|COPPA ALBERTO|COPPA ALBERTO">4 - COPPA ALBERTO - COPPA ALBERTO</option>
+<option value="5|MARTIN ESPINEL|MARTIN ESPINEL">5 - MARTIN ESPINEL - MARTIN ESPINEL</option>
+<option value="15|POLETTO JOSE FRANCISCO|POLETTO JOSE FRANCISCO">15 - POLETTO JOSE FRANCISCO - POLETTO JOSE FRANCISCO</option>
+<option value="20|MANODORO MARIA DE LOS ANGELES|MANODORO MARIA DE LOS ANGELES">20 - MANODORO MARIA DE LOS ANGELES - MANODORO MARIA DE LOS ANGELES</option>
+<option value="24|GALLO ERNESTO MARIO|GALLO ERNESTO MARIO">24 - GALLO ERNESTO MARIO - GALLO ERNESTO MARIO</option>
+
+<option value="80|PBA ZN2|EMILIO CHAVEZ">80 - PBA ZN2 - EMILIO CHAVEZ</option>
+<option value="81|PBA ZN|EMILIO CHAVEZ">81 - PBA ZN - EMILIO CHAVEZ</option>
+<option value="82|PBA ZO|LUCAS RIVERO">82 - PBA ZO - LUCAS RIVERO</option>
+<option value="83|CABA NORTE|LUCAS RIVERO">83 - CABA NORTE - LUCAS RIVERO</option>
+<option value="84|CABA SUR|DIEGO CAPUANO">84 - CABA SUR - DIEGO CAPUANO</option>
+<option value="85|PBA ZS 1|OSCAR LOPEZ">85 - PBA ZS 1 - OSCAR LOPEZ</option>
+<option value="86|PBA ZS 2|FERNANDO BARROZO">86 - PBA ZS 2 - FERNANDO BARROZO</option>
+<option value="87|PBA ZO 2|DIEGO CAPUANO">87 - PBA ZO 2 - DIEGO CAPUANO</option>
+
+<option value="99|ALTRI|ALTRI GERENCIA">99 - ALTRI - ALTRI GERENCIA</option>
+
+<option value="100|JUJUY|LEANDRO LEIVA">100 - JUJUY - LEANDRO LEIVA</option>
+<option value="101|SALTA|LEANDRO LEIVA">101 - SALTA - LEANDRO LEIVA</option>
+<option value="102|FORMOSA|DIEGO CAPUANO">102 - FORMOSA - DIEGO CAPUANO</option>
+<option value="103|TUCUMAN|LEANDRO LEIVA">103 - TUCUMAN - LEANDRO LEIVA</option>
+<option value="104|CATAMARCA|DIEGO CAPUANO">104 - CATAMARCA - DIEGO CAPUANO</option>
+<option value="105|SANTIAGO DEL ESTERO|LEANDRO LEIVA">105 - SANTIAGO DEL ESTERO - LEANDRO LEIVA</option>
+<option value="106|CHACO|LEANDRO LEIVA">106 - CHACO - LEANDRO LEIVA</option>
+<option value="107|CORRIENTES|LEANDRO LEIVA">107 - CORRIENTES - LEANDRO LEIVA</option>
+<option value="108|MISIONES|LEANDRO LEIVA">108 - MISIONES - LEANDRO LEIVA</option>
+
+<option value="109|SANTA FE|EMILIO CHAVEZ">109 - SANTA FE - EMILIO CHAVEZ</option>
+<option value="110|LA RIOJA|DIEGO CAPUANO">110 - LA RIOJA - DIEGO CAPUANO</option>
+
+<option value="112|ENTRE RIOS|DIEGO OYOLA">112 - ENTRE RIOS - DIEGO OYOLA</option>
+<option value="113|SAN JUAN|MATIAS TRAYNOR">113 - SAN JUAN - MATIAS TRAYNOR</option>
+<option value="114|MENDOZA|MATIAS TRAYNOR">114 - MENDOZA - MATIAS TRAYNOR</option>
+<option value="115|SAN LUIS|DIEGO CAPUANO">115 - SAN LUIS - DIEGO CAPUANO</option>
+<option value="116|LA PAMPA|DIEGO CAPUANO">116 - LA PAMPA - DIEGO CAPUANO</option>
+
+<option value="117|NEUQUEN|DIEGO OYOLA">117 - NEUQUEN - DIEGO OYOLA</option>
+<option value="118|RIO NEGRO|DIEGO OYOLA">118 - RIO NEGRO - DIEGO OYOLA</option>
+<option value="119|CHUBUT|DIEGO OYOLA">119 - CHUBUT - DIEGO OYOLA</option>
+<option value="120|SANTA CRUZ|DIEGO OYOLA">120 - SANTA CRUZ - DIEGO OYOLA</option>
+<option value="121|TIERRA DEL FUEGO|DIEGO OYOLA">121 - TIERRA DEL FUEGO - DIEGO OYOLA</option>
+
+</select>
+
+<input type="hidden" id="codigo">
+<input type="hidden" id="zona">
+<input type="hidden" id="responsable">
+
+<input id="transporte" placeholder="Transporte">
+<textarea id="proveedores" placeholder="Proveedores"></textarea>
+<textarea id="referencias" placeholder="Referencias"></textarea>
+
+<button class="save" onclick="guardar()">💾 Guardar</button>
+<button class="pdf" onclick="pdf()">📄 PDF</button>
+<button onclick="enviarMail()" style="background:#0ea5e9;color:#fff;">📧 Enviar por Mail</button>
+<button class="nuevo" onclick="limpiar()">➕ Nuevo</button>
+<button class="export" onclick="exportar()">📤 CSV</button>
+<button class="jsonbtn" onclick="exportJSON()">💾 Exportar JSON</button>
+<button class="jsonbtn" onclick="importJSON()">📂 Importar JSON</button>
+
+<h3>Clientes</h3>
+<div id="lista"></div>
+
+</div>
+
+<div id="msg"></div>
+
+<script>
+// LOGIN
+const ADMIN_EMAIL="admin";
+const ADMIN_PASS="123456";
+
+function login(){
+if(adminEmail.value===ADMIN_EMAIL && adminPass.value===ADMIN_PASS){
+loginBox.style.display="none";
+mainApp.style.display="block";
+listar();
+}else alert("Error login");
+}
+
+// ZONA
+function cargarZona(){
+let val=zonaSelect.value;
+if(!val) return;
+let p=val.split("|");
+codigo.value=p[0];
+zona.value=p[1];
+responsable.value=p[2];
+}
+
+// CRUD
+let editingIndex=null;
+
+function guardar(){
+let data=JSON.parse(localStorage.getItem("clientes")||"[]");
+
+let c={
+razon:razon.value,
+fantasia:fantasia.value,
+cuit:cuit.value,
+domicilio:domicilio.value,
+localidad:localidad.value,
+whatsapp:whatsapp.value,
+email:email.value,
+web:web.value,
+transporte:transporte.value,
+proveedores:proveedores.value,
+referencias:referencias.value,
+codigo:codigo.value,
+zona:zona.value,
+responsable:responsable.value
+};
+
+if(editingIndex!==null){
+data[editingIndex]=c;
+editingIndex=null;
+mostrar("✅ Cliente actualizado");
+}else{
+data.push(c);
+mostrar("✅ Cliente guardado");
+}
+
+localStorage.setItem("clientes",JSON.stringify(data));
+listar();
+limpiar();
+}
+
+function listar(){
+let data=JSON.parse(localStorage.getItem("clientes")||"[]");
+lista.innerHTML="";
+data.forEach((c,i)=>{
+lista.innerHTML+=`
+<div class="item">
+<div>
+<b>${c.razon}</b><br>
+${c.whatsapp}<br>
+${c.codigo||""} - ${c.zona||""} - ${c.responsable||""}
+</div>
+<div>
+<button onclick="editar(${i})">✏️</button>
+<button onclick="eliminar(${i})">🗑️</button>
+<button class="whatsapp" onclick="enviarWhatsApp(${i})">WA</button>
+</div>
+</div>`;
+});
+}
+
+function editar(i){
+let c=JSON.parse(localStorage.getItem("clientes"))[i];
+Object.keys(c).forEach(k=>{
+if(document.getElementById(k)) document.getElementById(k).value=c[k];
+});
+editingIndex=i;
+mostrar("✏️ Editando cliente");
+}
+
+function eliminar(i){
+if(confirm("¿Eliminar cliente?")){
+let data=JSON.parse(localStorage.getItem("clientes"));
+data.splice(i,1);
+localStorage.setItem("clientes",JSON.stringify(data));
+listar();
+mostrar("🗑️ Cliente eliminado");
+}
+}
+
+// WHATSAPP
+function enviarWhatsApp(i){
+let c=JSON.parse(localStorage.getItem("clientes"))[i];
+let num=(c.whatsapp||"").replace(/\D/g,'');
+if(!num){alert("Sin número");return;}
+window.open(`https://wa.me/${num}`,"_blank");
+}
+
+// PDF PRO
+function pdf(){
+if(!razon.value){alert("Cargá un cliente");return;}
+
+const val=v=>v||"---";
+
+let container=document.createElement("div");
+container.style.position="fixed";
+container.style.top="-9999px";
+container.style.width="750px";
+container.style.background="#fff";
+container.style.color="#000";
+container.style.padding="30px";
+
+container.innerHTML=`
+<h2 style="text-align:center;">FICHA CLIENTE</h2>
+<table style="width:100%;border-collapse:collapse;">
+${row("Razón",val(razon.value),"Fantasia",val(fantasia.value))}
+${row("CUIT",val(cuit.value),"WhatsApp",val(whatsapp.value))}
+${row("Domicilio",val(domicilio.value),"Localidad",val(localidad.value))}
+${row("Email",val(email.value),"Web",val(web.value))}
+${row("Código",val(codigo.value),"Zona",val(zona.value))}
+${row("Responsable",val(responsable.value),"Transporte",val(transporte.value))}
+${rowFull("Proveedores",val(proveedores.value))}
+${rowFull("Referencias",val(referencias.value))}
+</table>
+`;
+
+document.body.appendChild(container);
+
+html2canvas(container,{scale:2}).then(canvas=>{
+let pdf=new jspdf.jsPDF();
+pdf.addImage(canvas.toDataURL(),"PNG",10,10,180,0);
+pdf.save("cliente.pdf");
+document.body.removeChild(container);
+});
+}
+
+function row(a,b,c,d){
+return `<tr>
+<td style="border:1px solid #000;padding:8px;"><b>${a}</b><br>${b}</td>
+<td style="border:1px solid #000;padding:8px;"><b>${c}</b><br>${d}</td>
+</tr>`;
+}
+
+function rowFull(a,b){
+return `<tr><td colspan="2" style="border:1px solid #000;padding:8px;"><b>${a}</b><br>${b}</td></tr>`;
+}
+
+// CSV COMPLETO
+function exportar(){
+let data=JSON.parse(localStorage.getItem("clientes")||"[]");
+
+let csv="Razon,Fantasia,CUIT,Domicilio,Localidad,WhatsApp,Email,Web,Codigo,Zona,Responsable,Transporte,Proveedores,Referencias\n";
+
+data.forEach(c=>{
+csv+=`"${c.razon}","${c.fantasia}","${c.cuit}","${c.domicilio}","${c.localidad}","${c.whatsapp}","${c.email}","${c.web}","${c.codigo}","${c.zona}","${c.responsable}","${c.transporte}","${c.proveedores}","${c.referencias}"\n`;
+});
+
+let blob=new Blob([csv]);
+let a=document.createElement("a");
+a.href=URL.createObjectURL(blob);
+a.download="clientes_completo.csv";
+a.click();
+}
+
+// JSON
+function exportJSON(){
+let blob=new Blob([localStorage.getItem("clientes")]);
+let a=document.createElement("a");
+a.href=URL.createObjectURL(blob);
+a.download="clientes.json";
+a.click();
+}
+
+function importJSON(){
+let input=document.createElement("input");
+input.type="file";
+input.accept=".json";
+input.onchange=e=>{
+let reader=new FileReader();
+reader.onload=evt=>{
+localStorage.setItem("clientes",evt.target.result);
+listar();
+mostrar("📂 Backup restaurado");
+};
+reader.readAsText(e.target.files[0]);
+};
+input.click();
+}
+
+// UTIL
+function limpiar(){
+document.querySelectorAll("input,textarea").forEach(e=>e.value="");
+zonaSelect.value="";
+editingIndex=null;
+}
+
+function mostrar(t){
+msg.innerText=t;
+msg.style.display="block";
+setTimeout(()=>msg.style.display="none",1500);
+}
+
+// ENVIAR MAIL
+function enviarMail(){
+    if(!razon.value){
+        alert("⚠️ Cargá un cliente primero");
+        return;
+    }
+
+    const val = v => v || "---";
+
+    let asunto = `Alta Cliente: ${razon.value}`;
+
+    let cuerpo = `
+FICHA DE CLIENTE
+
+Razón Social: ${val(razon.value)}
+Nombre Fantasía: ${val(fantasia.value)}
+CUIT: ${val(cuit.value)}
+Domicilio: ${val(domicilio.value)}
+Localidad: ${val(localidad.value)}
+WhatsApp: ${val(whatsapp.value)}
+E-mail: ${val(email.value)}
+Web: ${val(web.value)}
+
+Código: ${val(codigo.value)}
+Zona: ${val(zona.value)}
+Responsable: ${val(responsable.value)}
+
+Transporte: ${val(transporte.value)}
+
+Proveedores:
+${val(proveedores.value)}
+
+Referencias:
+${val(referencias.value)}
+`;
+
+    let mailto = `mailto:?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`;
+
+    window.location.href = mailto;
+}
+</script>
+
+</body>
+</html>
